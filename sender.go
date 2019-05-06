@@ -8,6 +8,10 @@ import (
 	"time"
 )
 
+var (
+	_socketUrl, _socketPort, _socketToken string
+)
+
 type directMessageData struct {
 	socketId string `json:"id"`
 	data     string `json:"data"`
@@ -19,10 +23,10 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func initClient(domain, socketUrl, socketPort, socketToken string) (*gosocketio.Client, error) {
-	url := socketUrl
-	port, _ := strconv.Atoi(socketPort)
-	token := socketToken
+func initClient(domain string) (*gosocketio.Client, error) {
+	url := _socketUrl
+	port, _ := strconv.Atoi(_socketPort)
+	token := _socketToken
 
 	builtUrl := gosocketio.GetUrl(url, port, false)
 	builtUrl += "&token=" + token + "&domain=" + domain
@@ -36,9 +40,14 @@ func initClient(domain, socketUrl, socketPort, socketToken string) (*gosocketio.
 	return client, err
 }
 
-func SendDirectMessage(domain, socketUrl, socketPort, socketToken, socketId, data string) {
+func Init(socketUrl, socketPort, socketToken string) {
+	_socketPort = socketPort
+	_socketToken = socketToken
+	_socketUrl = socketUrl
+}
+func SendDirectMessage(domain, socketId, data string) {
 
-	client, error := initClient(domain, socketUrl, socketPort, socketToken)
+	client, error := initClient(domain)
 
 	if error != nil {
 		return
@@ -51,8 +60,8 @@ func SendDirectMessage(domain, socketUrl, socketPort, socketToken, socketId, dat
 	client.Close()
 }
 
-func SendToRoom(domain, socketUrl, socketPort, socketToken, eventName, data string) {
-	client, error := initClient(domain, socketUrl, socketPort, socketToken)
+func SendToRoom(domain, eventName, data string) {
+	client, error := initClient(domain)
 
 	if error != nil {
 		return
