@@ -4,7 +4,6 @@ import (
 	gosocketio "github.com/graarh/golang-socketio"
 	"github.com/graarh/golang-socketio/transport"
 	"log"
-	"os"
 	"strconv"
 	"time"
 )
@@ -20,10 +19,10 @@ func failOnError(err error, msg string) {
 	}
 }
 
-func initClient(domain string) (*gosocketio.Client, error) {
-	url := os.Getenv("SOCKET_URL")
-	port, _ := strconv.Atoi(os.Getenv("SOCKET_PORT"))
-	token := os.Getenv("SOCKET_TOKEN")
+func initClient(domain, socketUrl, socketPort, socketToken string) (*gosocketio.Client, error) {
+	url := socketUrl
+	port, _ := strconv.Atoi(socketPort)
+	token := socketToken
 
 	builtUrl := gosocketio.GetUrl(url, port, false)
 	builtUrl += "&token=" + token + "&domain=" + domain
@@ -37,9 +36,9 @@ func initClient(domain string) (*gosocketio.Client, error) {
 	return client, err
 }
 
-func SendDirectMessage(domain, socketId, data string) {
+func SendDirectMessage(domain, socketUrl, socketPort, socketToken, socketId, data string) {
 
-	client, error := initClient(domain)
+	client, error := initClient(domain, socketUrl, socketPort, socketToken)
 
 	if error != nil {
 		return
@@ -52,8 +51,8 @@ func SendDirectMessage(domain, socketId, data string) {
 	client.Close()
 }
 
-func SendToRoom(domain, eventName, data string) {
-	client, error := initClient(domain)
+func SendToRoom(domain, socketUrl, socketPort, socketToken, eventName, data string) {
+	client, error := initClient(domain, socketUrl, socketPort, socketToken)
 
 	if error != nil {
 		return
