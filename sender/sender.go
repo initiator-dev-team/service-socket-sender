@@ -1,4 +1,4 @@
-package socketSender
+package sender
 
 import (
 	gosocketio "github.com/graarh/golang-socketio"
