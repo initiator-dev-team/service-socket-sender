@@ -58,6 +58,7 @@ func SendDirectMessage(domain, socketId, data string) {
 	log.Println("emitted", "method:", "DIRECT_MESSAGE", "socketId:", socketId, "data:", data)
 
 	client.Close()
+	log.Println("client closed")
 }
 
 func SendToRoom(domain, eventName, data string) {
@@ -73,4 +74,5 @@ func SendToRoom(domain, eventName, data string) {
 	log.Println("emitted", "method:", eventName, "data:", data)
 
 	client.Close()
+	log.Println("client closed")
 }
